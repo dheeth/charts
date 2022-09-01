@@ -71,6 +71,8 @@ spec:
         - /shared/authenticator
         {{- end }}
         {{- end }}
+        {{- else }}
+        - /shared/authenticator
         {{- end }}
         - rundex
         image: {{ .image }}
@@ -97,6 +99,9 @@ spec:
         - /shared
         {{- end }}
         {{- end }}
+        {{- else }}
+        - /authenticator
+        - /shared
         {{- end }}
         {{- if $.Values.installer.modules }}
         {{ range $.Values.installer.modules }}
@@ -106,6 +111,8 @@ spec:
         image: {{ $.Values.components.argocdDexServer.initContainer.authenticator }}
         {{- end }}
         {{- end }}
+        {{- else }}
+        image: {{ $.Values.components.argocdDexServer.initContainer.authenticator }}
         {{- end }}
         imagePullPolicy: IfNotPresent
         name: copyutil

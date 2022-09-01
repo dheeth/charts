@@ -1,7 +1,7 @@
 installer:
-  repo: "devtron-labs/devtron"
+  repo: "dheeth/devtron"
 #  For Kubernetes version < 1.16, set release: legacy. You won't be able to upgrade Devtron unless you upgrade the K8s version to 1.16 or above.
-  release: "v0.5.0" #You can use a branch name or a release tag name as a release, for gitee as source only "main" is supported as of now
+  release: "integrate-argocd" #You can use a branch name or a release tag name as a release, for gitee as source only "main" is supported as of now
   image: quay.io/devtron/inception
   tag: c62d4c30-185-9354
   source: "github" # Available options are github and gitee
@@ -105,3 +105,146 @@ components:
         GIT_REPO_URL: "https://github.com/devtron-labs/devtron.git"
         DB_NAME: "casbin"
         GIT_HASH: "e9175e9845c9ca8f6260ea58ce7ad22118244eac"
+
+
+argo-cd:
+  enabled: false
+  fullnameOverride: "argocd"
+  configs:
+    secret:
+      createSecret: false
+  # argocd-application-controller
+  controller:
+    args:
+      # -- define the application controller `--status-processors`
+      statusProcessors: "50"
+      # -- define the application controller `--operation-processors`
+      operationProcessors: "25"
+      # -- define the application controller `--app-hard-resync`
+      appHardResyncPeriod: "0"
+      # -- define the application controller `--app-resync`
+      appResyncPeriod: "180"
+      # -- define the application controller `--self-heal-timeout-seconds`
+      selfHealTimeout: "5"
+      # -- define the application controller `--repo-server-timeout-seconds`
+      repoServerTimeoutSeconds: "200"
+    extraArgs:
+    - --kubectl-parallelism-limit
+    - "35"
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - all
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+    env:
+    - name: ARGOCD_RECONCILIATION_TIMEOUT
+      valueFrom:
+        configMapKeyRef:
+          key: timeout.reconciliation
+          name: argocd-cm
+          optional: true
+    affinity:
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: argocd-application-controller
+            topologyKey: kubernetes.io/hostname
+          weight: 100
+        - podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/part-of: argocd
+            topologyKey: kubernetes.io/hostname
+          weight: 5
+  # argocd-dex-server
+  dex:
+    enabled: false
+  
+  redis:
+    affinity:
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: argocd-redis
+            topologyKey: kubernetes.io/hostname
+          weight: 100
+        - podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/part-of: argocd
+            topologyKey: kubernetes.io/hostname
+          weight: 5
+    
+  server:
+    configEnabled: false
+    affinity:
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: argocd-server
+            topologyKey: kubernetes.io/hostname
+          weight: 100
+        - podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/part-of: argocd
+            topologyKey: kubernetes.io/hostname
+          weight: 5
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - all
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+    rbacConfig:
+      policy.default: role:admin
+  repoServer:
+    affinity:
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+        - podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: argocd-repo-server
+            topologyKey: kubernetes.io/hostname
+          weight: 100
+        - podAffinityTerm:
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/part-of: argocd
+            topologyKey: kubernetes.io/hostname
+          weight: 5
+    extraArgs:
+    - --repo-cache-expiration
+    - 24h
+    - --parallelismlimit
+    - "50"
+    env:
+    - name: ARGOCD_RECONCILIATION_TIMEOUT
+      valueFrom:
+        configMapKeyRef:
+          key: timeout.reconciliation
+          name: argocd-cm
+          optional: true
+    - name: ARGOCD_EXEC_TIMEOUT
+      value: 180s
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - all
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+  applicationSet:
+    enabled: false
+  notifications:
+    enabled: false

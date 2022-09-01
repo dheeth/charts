@@ -1,4 +1,5 @@
 {{- with .Values.components.argocdDexServer }}
+{{- $argocdEnabled :=  index $.Values "argo-cd" }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -62,10 +63,14 @@ spec:
             weight: 5
       containers:
       - command:
-        {{- if and $.Values.installer.modules $.Release.IsUpgrade }}
+        {{- if $.Values.installer.modules }}
+        {{ range $.Values.installer.modules }}
+        {{- if and (eq . "cicd") ($argocdEnabled.enabled) }}
         - /shared/argocd-dex
         {{- else }}
         - /shared/authenticator
+        {{- end }}
+        {{- end }}
         {{- end }}
         - rundex
         image: {{ .image }}
@@ -82,17 +87,25 @@ spec:
       - command:
         - cp
         - -n
-        {{- if and $.Values.installer.modules $.Release.IsUpgrade }}
+        {{- if $.Values.installer.modules }}
+        {{ range $.Values.installer.modules }}
+        {{- if and (eq . "cicd") ($argocdEnabled.enabled) }}
         - /usr/local/bin/argocd
         - /shared/argocd-dex
         {{- else }}
         - /authenticator
         - /shared
         {{- end }}
-        {{- if and $.Values.installer.modules $.Release.IsUpgrade }}
-        image: {{ .initContainer.cicdAuthenticator }}
+        {{- end }}
+        {{- end }}
+        {{- if $.Values.installer.modules }}
+        {{ range $.Values.installer.modules }}
+        {{- if and (eq . "cicd") ($argocdEnabled.enabled) }}
+        image: {{ $.Values.components.argocdDexServer.initContainer.cicdAuthenticator }}
         {{- else }}
-        image: {{ .initContainer.authenticator }}
+        image: {{ $.Values.components.argocdDexServer.initContainer.authenticator }}
+        {{- end }}
+        {{- end }}
         {{- end }}
         imagePullPolicy: IfNotPresent
         name: copyutil

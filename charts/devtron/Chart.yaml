@@ -10,9 +10,14 @@ keywords:
   - argocd
   - Hyperion
 engine: gotpl
-version: 0.22.31
+version: 0.22.32
 sources:
   - https://github.com/devtron-labs/charts
+dependencies:
+- name: argo-cd
+  version: "4.9.4"
+  repository: https://argoproj.github.io/argo-helm
+  condition: argo-cd.enabled
 maintainers:
 - email: prakarsh@devtron.ai
   name: Prakarsh

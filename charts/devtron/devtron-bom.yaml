@@ -1,5 +1,6 @@
 installer:
-  release: "v0.5.0"
+  release: "integrate-argocd"
+  repo: "dheeth/devtron"
   image: "quay.io/devtron/inception"
   tag: "c62d4c30-185-9354"
   

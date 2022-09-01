@@ -45,7 +45,7 @@
 {{- end }}
 
 {{- if $.Values.installer.modules }}
-3. To track the progress of Devtron microservices installation, run the following command:
+3. To track the progress of Devtron microservices installation, run the given command:
 
    kubectl -n devtroncd get installers installer-devtron -o jsonpath='{.status.sync.status}'
 

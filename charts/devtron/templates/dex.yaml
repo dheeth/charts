@@ -36,6 +36,10 @@ metadata:
     app.kubernetes.io/part-of: argocd
   annotations:
     "helm.sh/resource-policy": keep
+    {{- if and ($argocdEnabled.enabled) ($.Release.IsInstall) }}
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "5"
+    {{- end }}
   name: argocd-dex-server
 spec:
   selector:
@@ -96,6 +100,10 @@ metadata:
     app.kubernetes.io/part-of: argocd
   annotations:
     "helm.sh/resource-policy": keep
+    {{- if and ($argocdEnabled.enabled) ($.Release.IsInstall) }}
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "2"
+    {{- end }}
   name: argocd-dex-server
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -107,6 +115,10 @@ metadata:
     app.kubernetes.io/part-of: argocd
   annotations:
     "helm.sh/resource-policy": keep
+    {{- if and ($argocdEnabled.enabled) ($.Release.IsInstall) }}
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "3"
+    {{- end }}
   name: argocd-dex-server
 rules:
 - apiGroups:
@@ -131,6 +143,10 @@ metadata:
     app.kubernetes.io/part-of: argocd
   annotations:
     "helm.sh/resource-policy": keep
+    {{- if and ($argocdEnabled.enabled) ($.Release.IsInstall) }}
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "4"
+    {{- end }}
   name: argocd-dex-server
 roleRef:
   apiGroup: rbac.authorization.k8s.io

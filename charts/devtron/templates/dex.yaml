@@ -58,15 +58,7 @@ spec:
             weight: 5
       containers:
       - command:
-        {{- if $.Values.installer.modules }}
-        {{- if and (has "cicd" $.Values.installer.modules) ($argocdEnabled.enabled) }}
-        - /shared/argocd-dex
-        {{- else }}
         - /shared/authenticator
-        {{- end }}
-        {{- else }}
-        - /shared/authenticator
-        {{- end }}
         - rundex
         image: {{ .image }}
         imagePullPolicy: {{ .imagePullPolicy }}
@@ -82,27 +74,9 @@ spec:
       - command:
         - cp
         - -n
-        {{- if $.Values.installer.modules }}
-        {{- if and (has "cicd" $.Values.installer.modules) ($argocdEnabled.enabled) }}
-        - /usr/local/bin/argocd
-        - /shared/argocd-dex
-        {{- else }}
         - /authenticator
         - /shared
-        {{- end }}
-        {{- else }}
-        - /authenticator
-        - /shared
-        {{- end }}
-        {{- if $.Values.installer.modules }}
-        {{- if and (has "cicd" $.Values.installer.modules) ($argocdEnabled.enabled) }}
-        image: {{ $.Values.components.argocdDexServer.initContainer.cicdAuthenticator }}
-        {{- else }}
-        image: {{ $.Values.components.argocdDexServer.initContainer.authenticator }}
-        {{- end }}
-        {{- else }}
-        image: {{ $.Values.components.argocdDexServer.initContainer.authenticator }}
-        {{- end }}
+        image: {{ .initContainer.authenticator }}
         imagePullPolicy: IfNotPresent
         name: copyutil
         volumeMounts:

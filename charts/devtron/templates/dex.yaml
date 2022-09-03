@@ -9,6 +9,10 @@ metadata:
     app.kubernetes.io/part-of: argocd
   annotations:
     "helm.sh/resource-policy": keep
+    {{- if and ($argocdEnabled.enabled) ($.Release.IsInstall) }}
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "6"
+    {{- end }}
   name: argocd-dex-server
 spec:
   ports:

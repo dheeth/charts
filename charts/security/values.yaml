@@ -1,0 +1,86 @@
+imageScanner:
+  configs:
+    CLAIR_ADDR: clair.devtroncd:6060
+    CLIENT_ID: client-2
+    NATS_SERVER_HOST: nats://devtron-nats.devtroncd:4222
+    PG_ADDR: postgresql-postgresql.devtroncd
+    PG_DATABASE: orchestrator
+    PG_LOG_QUERY: "false"
+    PG_PORT: "5432"
+    PG_USER: postgres
+  # secrets:
+  #   PG_PASSWORD: "devtron"
+  image: "quay.io/devtron/image-scanner:b278f42b-334-10141"
+  imagePullPolicy: IfNotPresent
+  resources: {}
+
+guard:
+  image: "quay.io/devtron/guard:62058d7c-122-2192"
+  imagePullPolicy: IfNotPresent
+  replicaCount: 2
+
+clair:
+  enabled: false
+  config:
+    postgresHost: clair-pg-postgresql
+    postgresPort: 5432
+    postgresdbname: clairv4
+    postgresUser: clair
+    postgresPassword: clair
+    introspection_addr: :6061
+    http_listen_addr: :6060
+    log_level: debug
+    indexer:
+      scanlock_retry: 10
+      layer_scan_concurrency: 5
+      migrations: true
+    matcher:
+      indexer_addr: :6060
+      max_conn_pool: 100
+      migrations: true
+      clairUpdaterSets:
+      - alpine
+      - aws
+      - debian
+      - oracle
+      - photon
+      - pyupio
+      - rhel
+      - suse
+      - ubuntu
+    notifier:
+      delivery_interval: 1m
+      poll_interval: 5m
+      migrations: true
+  image:
+    pullPolicy: Never
+    repository: clair-local
+    tag: latest
+  ingress:
+    annotations: null
+    enabled: false
+    hosts:
+    - chart-example.local
+    tls: null
+  insecureTls: false
+  nodeSelector: {}
+  replicaCount: 1
+  podLabels:
+    component: clair
+  resources:
+    limits:
+      cpu: 200m
+      memory: 1500Mi
+    requests:
+      cpu: 100m
+      memory: 500Mi
+  service:
+    externalApiPort: 6060
+    externalHealthPort: 6061
+    internalApiPort: 6060
+    internalHealthPort: 6061
+    internalHealthPath: /healthz
+    type: ClusterIP
+  tolerations: []
+  extraEnv: []
+  extraArgs: []

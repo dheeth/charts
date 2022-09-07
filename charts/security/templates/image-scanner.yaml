@@ -1,5 +1,4 @@
 {{- with .Values.imageScanner }}
-{{- if .secrets }}
 apiVersion: v1
 kind: Secret
 metadata:
@@ -7,6 +6,7 @@ metadata:
   labels:
     release: devtron
 type: Opaque
+{{- if .secrets }}
 data:
 {{- range $k, $v := .secrets }}
   {{ $k }}: {{ $v | b64enc | quote }}

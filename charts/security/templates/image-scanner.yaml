@@ -82,6 +82,11 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
+            - name: PG_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .dbconfig.secretName }}
+                  key: {{ .dbconfig.keyName }}
           envFrom:
           - configMapRef:
               name: image-scanner-cm

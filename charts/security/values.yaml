@@ -10,6 +10,9 @@ imageScanner:
     PG_USER: postgres
   # secrets:
   #   PG_PASSWORD: "devtron"
+  dbconfig:
+    secretName: postgresql-postgresql
+    keyName: postgresql-password
   image: "quay.io/devtron/image-scanner:b278f42b-334-10141"
   imagePullPolicy: IfNotPresent
   resources: {}

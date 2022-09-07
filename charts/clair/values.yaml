@@ -59,5 +59,9 @@ service:
   internalHealthPath: /healthz
   type: ClusterIP
 tolerations: []
-extraEnv: []
+extraEnv:
+- name: CLAIR_CONF
+  value: /etc/clair/config.yaml
+- name: CLAIR_MODE
+  value: combo
 extraArgs: []

@@ -43,12 +43,12 @@ components:
       sentry: "false"
       sentryEnv: "PRODUCTION"
       applicationMetrics: "true"
-    image: "quay.io/devtron/dashboard:09d9690d-240-10347"
+    image: "quay.io/devtron/dashboard:28591c0e-240-10382"
     imagePullPolicy: IfNotPresent
 
   devtron:
-    image: "quay.io/devtron/hyperion:51c5b59b-280-10346"
-    cicdImage: "quay.io/devtron/devtron:51c5b59b-326-10345"
+    image: "quay.io/devtron/hyperion:4fb63eae-282-10390"
+    cicdImage: "quay.io/devtron/devtron:4fb63eae-313-10391"
     imagePullPolicy: IfNotPresent
     customOverrides: {}
     serviceMonitor:
@@ -93,11 +93,11 @@ components:
     image: "quay.io/devtron/migrator:9c933d29-149-10140"
     envVars:
       devtron:
-        GIT_BRANCH: "gitops_acd_integration"
+        GIT_BRANCH: "main"
         SCRIPT_LOCATION: "scripts/sql/"
         GIT_REPO_URL: "https://github.com/devtron-labs/devtron.git"
         DB_NAME: "orchestrator"
-        GIT_HASH: "a5311d1a840e6641af7a58d9a350a23f3993a87d"
+        GIT_HASH: "4fb63eaee87a6f4f4f383ffa4f7c35e31fc4971a"
       casbin:
         GIT_BRANCH: "main"
         SCRIPT_LOCATION: "scripts/casbin/"
@@ -247,3 +247,9 @@ argo-cd:
     enabled: false
   notifications:
     enabled: false
+
+security:
+  enabled: false
+  clair:
+    enabled: false
+    fullnameOverride: clair

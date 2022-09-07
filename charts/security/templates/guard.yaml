@@ -15,30 +15,6 @@ data:
   cert.pem: {{ $cert.Cert | b64enc }}
   key.pem: {{ $cert.Key | b64enc }}
 ---
-apiVersion: admissionregistration.k8s.io/v1
-kind: ValidatingWebhookConfiguration
-metadata:
-  name: grumpy
-  annotations:
-    "helm.sh/hook": pre-install, pre-upgrade
-webhooks:
-  - name: grumpy.pipo02mix.org
-    clientConfig:
-      service:
-        name: guard-service
-        sideEffects: NoneOnDryRun
-        admissionReviewVersions: ["v1", "v1beta1"]
-        namespace: devtroncd
-        path: "/validate"
-      caBundle:
-{{ $ca.Cert | b64enc | indent 8 }}
-    rules:
-      - operations: ["CREATE","UPDATE"]
-        apiGroups: [""]
-        apiVersions: ["v1"]
-        resources: ["pods"]
-    failurePolicy: Ignore
----
 apiVersion: v1
 kind: Service
 metadata:

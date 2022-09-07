@@ -34,6 +34,23 @@ metadata:
     "helm.sh/resource-policy": keep
 type: Opaque
 ---
+{{- if $.Values.security.enabled }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: image-scanner-secret
+  labels:
+    release: devtron
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "2"
+    "helm.sh/resource-policy": keep
+type: Opaque
+data:
+  PG_PASSWORD: {{ $Secret }} 
+type: Opaque
+---
+{{- end }}
 apiVersion: v1
 kind: Secret
 metadata:

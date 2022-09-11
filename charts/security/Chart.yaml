@@ -6,7 +6,7 @@ maintaintainers:
   - name: Pawan Kumar
     email: pawan.mehta@devtron.ai
 sources:
-  - https://github.com/devtron-labs/charts
+- https://github.com/devtron-labs/charts
 version: 0.1.9
 appVersion: "0.1.9"
 dependencies:

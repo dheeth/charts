@@ -47,8 +47,8 @@ components:
     imagePullPolicy: IfNotPresent
 
   devtron:
-    image: "quay.io/devtron/hyperion:4fb63eae-282-10390"
-    cicdImage: "quay.io/devtron/devtron:4fb63eae-313-10391"
+    image: "quay.io/devtron/test:0a4dc0eb-3263-2014"
+    cicdImage: "quay.io/devtron/test:0a4dc0eb-3260-2015"
     imagePullPolicy: IfNotPresent
     customOverrides: {}
     serviceMonitor:
@@ -77,7 +77,7 @@ components:
     image: "ghcr.io/dexidp/dex:v2.30.2"
     imagePullPolicy: IfNotPresent
     initContainer:
-      authenticator: "quay.io/devtron/authenticator:415f5470-279-6520"
+      authenticator: "quay.io/devtron/test:5219e2c8-382-10474"
 
   kubelink:
     image: "quay.io/devtron/kubelink:919924e0-309-10348"

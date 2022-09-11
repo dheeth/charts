@@ -3,7 +3,7 @@ config:
   postgresPort: 5432
   postgresdbname: clairv4
   postgresUser: postgres
-  postgresPassword: clair
+  postgresPassword: ""
   introspection_addr: :6061
   http_listen_addr: :6060
   log_level: debug

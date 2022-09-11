@@ -17,11 +17,16 @@ imageScanner:
   imagePullPolicy: IfNotPresent
   resources: {}
 
-guard:
-  image: "quay.io/devtron/guard:62058d7c-122-2192"
-  imagePullPolicy: IfNotPresent
-  replicaCount: 2
-
 clair:
   enabled: false
   fullnameOverride: clair
+  extraEnv:
+  - name: CLAIR_CONF
+    value: /etc/clair/config.yaml
+  - name: CLAIR_MODE
+    value: combo
+  - name: PGPASSWORD
+    valueFrom:
+      secretKeyRef:
+        key: postgresql-password
+        name: postgresql-postgresql

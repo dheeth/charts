@@ -359,7 +359,7 @@ spec:
         - --configmap
         - workflow-controller-configmap
         - --executor-image
-        - {{ $.Values.workflowController.image }}
+        - {{ $.Values.workflowController.executorImage }}
         command:
         - workflow-controller
         env:

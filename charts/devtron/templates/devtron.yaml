@@ -32,6 +32,10 @@ data:
   DEFAULT_BUILD_LOGS_BUCKET: "devtron-ci-log"
   DEFAULT_CACHE_BUCKET: "devtron-ci-cache"
 {{- end }}
+{{- if or ($.Values.minio.enabled) (eq $.Values.configs.BLOB_STORAGE_PROVIDER "AZURE") }}
+  DEFAULT_CACHE_BUCKET_REGION: "us-west-2"
+  DEFAULT_CD_LOGS_BUCKET_REGION: "us-west-2"
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}

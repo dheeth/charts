@@ -331,7 +331,7 @@ data:
   config: |-
     parallelism: 50
     artifactRepository:
-      archiveLogs: true
+      archiveLogs: false
     containerRuntimeExecutor: pns
     executor:
       imagePullPolicy: Always

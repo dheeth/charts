@@ -98,7 +98,6 @@ data:
         echo "Bucket '$BUCKET' already exists."
       fi
 
-
       # set versioning for bucket
       if [ ! -z $VERSIONING ] ; then
         if [ $VERSIONING = true ] ; then
@@ -123,8 +122,13 @@ data:
     connectToMinio $scheme
     {{- if and ($.Values.minio.enabled) (not $.Values.configs.BLOB_STORAGE_PROVIDER) }}
     # Create the buckets
+    {{- if lt ($.Values.minio.replicaCount | int) 4 }}
     createBucket devtron-ci-log none false
     createBucket devtron-ci-cache none false
+    {{- else }}
+    createBucket devtron-ci-log none false true
+    createBucket devtron-ci-cache none false true
+    {{- end }}
     {{- end }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -256,7 +260,7 @@ spec:
           command: [ "/bin/sh",
                      "-ce",
                      {{- if eq ($.Values.minio.replicaCount | int) 1 }}
-                     "/usr/bin/docker-entrypoint.sh minio -S /etc/minio/certs/ server  http://devtron-minio-0.devtron-minio-svc.devtroncd.svc.cluster.local/export" ]
+                     "/usr/bin/docker-entrypoint.sh minio -S /etc/minio/certs/ server  http://devtron-minio-{0...0}.devtron-minio-svc.devtroncd.svc.cluster.local/export" ]
                      {{- else }}
                      "/usr/bin/docker-entrypoint.sh minio -S /etc/minio/certs/ server  http://devtron-minio-{0...{{ sub ($.Values.minio.replicaCount | int) 1 }}}.devtron-minio-svc.devtroncd.svc.cluster.local/export" ]
                      {{- end }}
@@ -295,7 +299,7 @@ spec:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: devtron-minio-make-bucket-job
+  name: devtron-minio-make-bucket-{{ randAlphaNum 3 | lower }}
   labels:
     app: minio-make-bucket-job
     release: devtron
@@ -334,6 +338,7 @@ spec:
 {{- end }}
 {{- end }}
 {{- if eq $.Values.configs.BLOB_STORAGE_PROVIDER "AZURE" }}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:

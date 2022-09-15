@@ -18,6 +18,23 @@ data:
   PG_DATABASE: orchestrator
   DEX_HOST: http://argocd-dex-server.devtroncd
   DEX_PORT: "5556"
+{{- if $.Values.installer.modules }}
+{{- if has "cicd" $.Values.installer.modules }}
+{{- if $.Values.configs }}
+{{- if or ($.Values.minio.enabled) ($.Values.configs.BLOB_STORAGE_PROVIDER) }}
+  BLOB_STORAGE_ENABLED: true
+{{- end }}
+{{ toYaml $.Values.configs | indent 2 }}
+{{- if and ($.Values.minio.enabled) (not $.Values.configs.BLOB_STORAGE_PROVIDER) }}
+  BLOB_STORAGE_PROVIDER: "S3"
+  BLOB_STORAGE_S3_ENDPOINT: "http://devtron-minio.devtroncd:9000"
+  BLOB_STORAGE_S3_ENDPOINT_INSECURE: true
+  DEFAULT_BUILD_LOGS_BUCKET: "devtron-ci-log"
+  DEFAULT_CACHE_BUCKET: "devtron-ci-cache"
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
 ---
 apiVersion: v1
 kind: ConfigMap

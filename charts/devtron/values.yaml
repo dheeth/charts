@@ -255,7 +255,7 @@ security:
     fullnameOverride: clair
 
 notifier:
-  enabled: true
+  enabled: false
   imagePullPolicy: IfNotPresent
   image: "quay.io/devtron/notifier:0ba0e243-372-10146"
   configs:

@@ -1,3 +1,5 @@
+{{- if $.Values.installer.modules }}
+{{- if has "cicd" $.Values.installer.modules }}
 {{- with .Values.notifier }}
 {{- if .enabled }}
 # Source: notifier/templates/secret.yaml
@@ -103,6 +105,8 @@ spec:
 {{- if .resources }}
           resources:
 {{ toYaml .resources | indent 12 }}
+{{- end }}
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}

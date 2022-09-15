@@ -43,7 +43,7 @@ components:
       sentry: "false"
       sentryEnv: "PRODUCTION"
       applicationMetrics: "true"
-    image: "quay.io/devtron/test:3283ad42-3233-2188"
+    image: "quay.io/devtron/test:153a37a3-3233-2197"
     imagePullPolicy: IfNotPresent
 
   devtron:
@@ -271,7 +271,7 @@ notifier:
   resources: {}
 
 minio:
-  enabled: true
+  enabled: false
   replicaCount: 1
   image: "quay.io/devtron/minio:RELEASE.2021-02-14T04-01-33Z"
   imagePullPolicy: IfNotPresent
@@ -284,7 +284,7 @@ workflowController:
 
 monitoring:
   grafana:
-    enabled: true
+    enabled: false
     image: "quay.io/devtron/grafana:7.3.1"
     imagePullPolicy: IfNotPresent
     resources: {}

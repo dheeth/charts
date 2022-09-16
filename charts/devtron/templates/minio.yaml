@@ -189,7 +189,7 @@ metadata:
   name: devtron-minio
   labels:
     app: minio
-    release: devtron
+    release: {{ $.Release.Name }}
     heritage: Helm
 spec:
   type: ClusterIP
@@ -200,7 +200,7 @@ spec:
       targetPort: 9000
   selector:
     app: minio
-    release: devtron
+    release: {{ $.Release.Name }}
 {{- if and ($.Values.minio.enabled) (not $.Values.configs.BLOB_STORAGE_PROVIDER) }}
 ---
 apiVersion: v1
@@ -209,7 +209,7 @@ metadata:
   name: devtron-minio-svc
   labels:
     app: minio
-    release: "devtron"
+    release: {{ $.Release.Name }}
     heritage: "Helm"
 spec:
   publishNotReadyAddresses: true
@@ -220,7 +220,7 @@ spec:
       protocol: TCP
   selector:
     app: minio
-    release: devtron
+    release: {{ $.Release.Name }}
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -228,7 +228,7 @@ metadata:
   name: devtron-minio
   labels:
     app: minio
-    release: devtron
+    release: {{ $.Release.Name }}
     heritage: Helm
 spec:
   updateStrategy:
@@ -243,13 +243,13 @@ spec:
   selector:
     matchLabels:
       app: minio
-      release: devtron
+      release: {{ $.Release.Name }}
   template:
     metadata:
       name: devtron-minio
       labels:
         app: minio
-        release: devtron
+        release: {{ $.Release.Name }}
     spec:
       serviceAccountName: "devtron-minio"
       securityContext:
@@ -306,14 +306,14 @@ metadata:
   name: devtron-minio-make-bucket-{{ randAlphaNum 3 | lower }}
   labels:
     app: minio-make-bucket-job
-    release: devtron
+    release: {{ $.Release.Name }}
     heritage: Helm
 spec:
   template:
     metadata:
       labels:
         app: minio-job
-        release: devtron
+        release: {{ $.Release.Name }}
     spec:
       restartPolicy: OnFailure
       volumes:
@@ -350,7 +350,7 @@ metadata:
   labels:
     app: minio
     chart: minio-8.0.9
-    release: devtron-minio
+    release: {{ $.Release.Name }}
     heritage: Helm
 spec:
   strategy:
@@ -362,13 +362,13 @@ spec:
   selector:
     matchLabels:
       app: minio
-      release: devtron-minio
+      release: {{ $.Release.Name }}
   template:
     metadata:
       name: devtron-minio
       labels:
         app: minio
-        release: devtron-minio
+        release: {{ $.Release.Name }}
     spec:
       serviceAccountName: "devtron-minio"
       containers:

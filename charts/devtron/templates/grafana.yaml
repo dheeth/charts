@@ -16,6 +16,10 @@ spec:
     spec:
       serviceAccountName: devtron
       containers:
+      - name: grafana-restart
+        image: "quay.io/devtron/kubectl:latest"
+        command: ['sh', '-c', 'kubectl rollout restart deployment/devtron-grafana -n devtroncd']
+      initContainers:
       - name: grafana-org
         image: quay.io/devtron/k8s-utils:tutum-curl
         command: ["sh","/tmp/org.sh"]
@@ -47,7 +51,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
 data:
   org.sh: |-
-    
+
     grafanaUrl="http://admin:${GRAFANA_PASSWORD}@devtron-grafana.devtroncd/grafana"
     echo $grafanaUrl
     ORG_ID=$( curl -d '{"name":"devtron-metrics-view"}' -H "Content-Type: application/json" -X POST "${grafanaUrl}/api/orgs" )
@@ -241,7 +245,15 @@ data:
     allow_org_create = true
   dashboardproviders.yaml: |
     apiVersion: 1
-    providers: []
+    providers:
+    - disableDeletion: true
+      editable: false
+      folder: ""
+      name: devtron-provider
+      options:
+        path: /var/lib/grafana/dashboards/devtron-provider
+      orgId: 2
+      type: file
   download_dashboards.sh: |
     #!/usr/bin/env sh
     set -euf

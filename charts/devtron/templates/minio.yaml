@@ -235,7 +235,11 @@ spec:
     type: RollingUpdate
   podManagementPolicy: "Parallel"
   serviceName: devtron-minio-svc
+  {{- if lt ($.Values.minio.replicaCount | int) 4 }}
+  replicas: 1
+  {{- else }}
   replicas: {{ $.Values.minio.replicaCount }}
+  {{- end }}
   selector:
     matchLabels:
       app: minio
@@ -259,8 +263,8 @@ spec:
 
           command: [ "/bin/sh",
                      "-ce",
-                     {{- if eq ($.Values.minio.replicaCount | int) 1 }}
-                     "/usr/bin/docker-entrypoint.sh minio -S /etc/minio/certs/ server  http://devtron-minio-{0...0}.devtron-minio-svc.devtroncd.svc.cluster.local/export" ]
+                     {{- if lt ($.Values.minio.replicaCount | int) 4 }}
+                     "/usr/bin/docker-entrypoint.sh minio -S /etc/minio/certs/ server  /export" ]
                      {{- else }}
                      "/usr/bin/docker-entrypoint.sh minio -S /etc/minio/certs/ server  http://devtron-minio-{0...{{ sub ($.Values.minio.replicaCount | int) 1 }}}.devtron-minio-svc.devtroncd.svc.cluster.local/export" ]
                      {{- end }}

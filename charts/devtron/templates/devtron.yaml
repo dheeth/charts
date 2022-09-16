@@ -108,6 +108,8 @@ spec:
               name: "devtron-secret"
           - configMapRef:
               name: "devtron-custom-cm"
+          - secretRef:
+              name: "devtron-custom-secret"
   revisionHistoryLimit: 3
 ---
 {{- if .serviceMonitor.enabled }}

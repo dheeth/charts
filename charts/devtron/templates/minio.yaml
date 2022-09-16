@@ -303,7 +303,11 @@ spec:
 apiVersion: batch/v1
 kind: Job
 metadata:
+  {{- if lt ($.Values.minio.replicaCount | int) 4 }}
+  name: devtron-minio-make-bucket-job
+  {{- else }}
   name: devtron-minio-make-bucket-{{ randAlphaNum 3 | lower }}
+  {{- end }}
   labels:
     app: minio-make-bucket-job
     release: {{ $.Release.Name }}

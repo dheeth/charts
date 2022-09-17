@@ -200,7 +200,11 @@ spec:
       targetPort: 9000
   selector:
     app: minio
+    {{- if eq $.Values.configs.BLOB_STORAGE_PROVIDER "AZURE" }}
+    release: devtron-minio
+    {{- else }}
     release: {{ $.Release.Name }}
+    {{- end }}
 {{- if and ($.Values.minio.enabled) (not $.Values.configs.BLOB_STORAGE_PROVIDER) }}
 ---
 apiVersion: v1
@@ -354,7 +358,7 @@ metadata:
   labels:
     app: minio
     chart: minio-8.0.9
-    release: {{ $.Release.Name }}
+    release: devtron-minio
     heritage: Helm
 spec:
   strategy:
@@ -366,13 +370,13 @@ spec:
   selector:
     matchLabels:
       app: minio
-      release: {{ $.Release.Name }}
+      release: devtron-minio
   template:
     metadata:
       name: devtron-minio
       labels:
         app: minio
-        release: {{ $.Release.Name }}
+        release: devtron-minio
     spec:
       serviceAccountName: "devtron-minio"
       containers:

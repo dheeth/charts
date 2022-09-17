@@ -36,6 +36,9 @@ data:
   DEFAULT_CACHE_BUCKET_REGION: "us-west-2"
   DEFAULT_CD_LOGS_BUCKET_REGION: "us-west-2"
 {{- end }}
+{{- if and (eq $.Values.configs.BLOB_STORAGE_PROVIDER "S3") (not $.Values.configs.BLOB_STORAGE_S3_ENDPOINT) }}
+  BLOB_STORAGE_S3_ENDPOINT: ""
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}

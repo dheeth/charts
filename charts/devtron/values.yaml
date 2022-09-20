@@ -294,6 +294,3 @@ monitoring:
       resources: {}
     persistence:
       storage: "2Gi"
-
-external-secrets:
-  enabled: false

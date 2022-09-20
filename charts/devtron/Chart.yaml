@@ -23,10 +23,6 @@ dependencies:
   version: "0.x.x"
   repository: https://dheeth.github.io/charts
   condition: security.enabled
-- name: external-secrets
-  version: "0.x.x"
-  repository: https://charts.external-secrets.io
-  condition: external-secrets.enabled
 maintainers:
 - email: prakarsh@devtron.ai
   name: Prakarsh

@@ -6,8 +6,6 @@ metadata:
   name: argo
   labels:
     name: devtron
-  annotations:
-    "helm.sh/hook": pre-install, pre-upgrade
 ---
 apiVersion: v1
 kind: Namespace
@@ -15,8 +13,6 @@ metadata:
   name: devtron-ci
   labels:
     name: devtron
-  annotations:
-    "helm.sh/hook": pre-install, pre-upgrade
 ---
 apiVersion: v1
 kind: Namespace
@@ -24,8 +20,6 @@ metadata:
   name: devtron-cd
   labels:
     name: devtron
-  annotations:
-    "helm.sh/hook": pre-install, pre-upgrade
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition

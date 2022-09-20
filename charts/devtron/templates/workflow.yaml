@@ -8,6 +8,7 @@ metadata:
     name: devtron
   annotations:
     "helm.sh/hook": pre-install, pre-upgrade
+    "helm.sh/resource-policy": keep
 ---
 apiVersion: v1
 kind: Namespace
@@ -17,6 +18,7 @@ metadata:
     name: devtron
   annotations:
     "helm.sh/hook": pre-install, pre-upgrade
+    "helm.sh/resource-policy": keep
 ---
 apiVersion: v1
 kind: Namespace
@@ -26,6 +28,7 @@ metadata:
     name: devtron
   annotations:
     "helm.sh/hook": pre-install, pre-upgrade
+    "helm.sh/resource-policy": keep
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition

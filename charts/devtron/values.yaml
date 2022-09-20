@@ -43,12 +43,12 @@ components:
       sentry: "false"
       sentryEnv: "PRODUCTION"
       applicationMetrics: "true"
-    image: "quay.io/devtron/test:2e1b51aa-3233-2267"
+    image: "quay.io/devtron/test:7753db21-3233-2351"
     imagePullPolicy: IfNotPresent
 
   devtron:
-    image: "quay.io/devtron/hyperion:8ca42ea9-282-10627"
-    cicdImage: "quay.io/devtron/devtron:8ca42ea9-313-10626"
+    image: "quay.io/devtron/hyperion:7699338e-282-10651"
+    cicdImage: "quay.io/devtron/devtron:7699338e-313-10650"
     imagePullPolicy: IfNotPresent
     customOverrides: {}
     serviceMonitor:
@@ -97,7 +97,7 @@ components:
         SCRIPT_LOCATION: "scripts/sql/"
         GIT_REPO_URL: "https://github.com/devtron-labs/devtron.git"
         DB_NAME: "orchestrator"
-        GIT_HASH: "47d4b64581eb1caf684bf2da2b9dbf747eef114c"
+        GIT_HASH: "7699338e69f735b1cbcf69280ab563745aa1b1c5"
       casbin:
         GIT_BRANCH: "main"
         SCRIPT_LOCATION: "scripts/casbin/"

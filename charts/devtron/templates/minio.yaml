@@ -310,7 +310,7 @@ metadata:
   {{- if lt ($.Values.minio.replicaCount | int) 4 }}
   name: devtron-minio-make-bucket-job
   {{- else }}
-  name: devtron-minio-make-bucket-{{ randAlphaNum 3 | lower }}
+  name: devtron-minio-make-bucket
   {{- end }}
   labels:
     app: minio-make-bucket-job

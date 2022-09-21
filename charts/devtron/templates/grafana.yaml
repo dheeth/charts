@@ -55,6 +55,7 @@ metadata:
 data:
   org.sh: |-
 
+    until nc -z devtron-grafana 80 > /dev/null; do echo Waiting for grafana to be ready; sleep 2; done;
     grafanaUrl="http://admin:${GRAFANA_PASSWORD}@devtron-grafana.devtroncd/grafana"
     echo $grafanaUrl
     ORG_ID=$( curl -d '{"name":"devtron-metrics-view"}' -H "Content-Type: application/json" -X POST "${grafanaUrl}/api/orgs" )

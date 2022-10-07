@@ -8,7 +8,7 @@ keywords:
   - Orchestration
   - K8s
   - Deployment
-  - argocd
+  - argo-cd
   - Hyperion
 engine: gotpl
 version: 0.22.112

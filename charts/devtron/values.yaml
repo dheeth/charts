@@ -86,6 +86,7 @@ components:
 
   postgres:
     image: "quay.io/devtron/postgres:11.9.0-debian-10-r26"
+    armImage: "postgres:11.9"
     imagePullPolicy: "IfNotPresent"
     persistence:
       volumeSize: "20Gi"
@@ -110,6 +111,14 @@ components:
 argo-cd:
   enabled: false
   fullnameOverride: "argocd"
+  global:
+    image:
+      # -- If defined, a repository applied to all Argo CD deployments
+      repository: quay.io/argoproj/argocd
+      # -- Overrides the global Argo CD image tag whose default is the chart appVersion
+      tag: "v2.4.0"
+      # -- If defined, a imagePullPolicy applied to all Argo CD deployments
+      imagePullPolicy: IfNotPresent
   configs:
     secret:
       createSecret: false

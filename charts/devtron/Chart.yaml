@@ -11,12 +11,12 @@ keywords:
   - argo-cd
   - Hyperion
 engine: gotpl
-version: 0.22.113
+version: 0.22.114
 sources:
   - https://github.com/devtron-labs/charts
 dependencies:
 - name: argo-cd
-  version: "4.9.4"
+  version: "5.2.0"
   repository: https://argoproj.github.io/argo-helm
   condition: argo-cd.enabled
 - name: security

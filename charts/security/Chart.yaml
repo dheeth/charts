@@ -3,7 +3,7 @@ name: security
 description: A Helm chart for devtron to enable security integration
 type: application
 maintaintainers:
-  - name: Pawan Kumar
+  - name: Pawan Kumar Mehta
     email: pawan.mehta@devtron.ai
 sources:
   - https://github.com/devtron-labs/charts

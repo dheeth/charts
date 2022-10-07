@@ -17,14 +17,14 @@ spec:
       serviceAccountName: devtron
       containers:
       - name: grafana-restart
-        image: "quay.io/devtron/kubectl:latest"
+        image: "toolhippie/kubectl:latest"
         command: ["sh", "/tmp/kubectl-grafana.sh"]
         volumeMounts:
           - name: grafana-org-volume
             mountPath: "/tmp/"
       initContainers:
       - name: grafana-org
-        image: quay.io/devtron/k8s-utils:tutum-curl
+        image: curlimages/curl:latest
         command: ["sh","/tmp/org.sh"]
         env:
           - name: GRAFANA_PASSWORD
@@ -512,7 +512,7 @@ spec:
         runAsUser: 472
       initContainers:
         - name: init-chown-data
-          image: "quay.io/devtron/busybox:1.31.1"
+          image: "busybox:1.31.1"
           imagePullPolicy: IfNotPresent
           securityContext:
             runAsNonRoot: false
@@ -524,7 +524,7 @@ spec:
             - name: storage
               mountPath: "/var/lib/grafana"
         - name: download-dashboards
-          image: "quay.io/devtron/curl:7.73.0"
+          image: "curlimages/curl:7.73.0"
           imagePullPolicy: IfNotPresent
           command: ["/bin/sh"]
           args: [ "-c", "mkdir -p /var/lib/grafana/dashboards/default && /bin/sh /etc/grafana/download_dashboards.sh" ]

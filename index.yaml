@@ -433,6 +433,40 @@ entries:
   devtron-operator:
   - apiVersion: v2
     appVersion: 0.6.0
+    created: "2022-10-07T08:49:42.731430084Z"
+    dependencies:
+    - condition: argo-cd.enabled
+      name: argo-cd
+      repository: https://argoproj.github.io/argo-helm
+      version: 4.9.4
+    - condition: security.enabled
+      name: security
+      repository: https://dheeth.github.io/charts
+      version: 0.x.x
+    description: Chart to configure and install Devtron. Devtron is a Kubernetes Orchestration
+      system.
+    digest: b73a7cee86d4fe742f8431d582f5725be000d94aa79b2d9881970a604a791e07
+    home: https://devtron.ai
+    icon: https://s3-ap-southeast-1.amazonaws.com/devtron.ai/images/devtron-sqr-logo.png
+    keywords:
+    - Devtron
+    - Kubernetes
+    - Orchestration
+    - K8s
+    - Deployment
+    - argocd
+    - Hyperion
+    maintainers:
+    - email: prakarsh@devtron.ai
+      name: Prakarsh
+    name: devtron-operator
+    sources:
+    - https://github.com/devtron-labs/charts
+    urls:
+    - https://github.com/dheeth/charts/releases/download/devtron-operator-0.22.112/devtron-operator-0.22.112.tgz
+    version: 0.22.112
+  - apiVersion: v2
+    appVersion: 0.6.0
     created: "2022-09-24T08:12:27.724756506Z"
     dependencies:
     - condition: argo-cd.enabled
@@ -5138,6 +5172,23 @@ entries:
   security:
   - apiVersion: v2
     appVersion: 0.2.1
+    created: "2022-10-07T08:49:42.851905846Z"
+    dependencies:
+    - condition: clair.enabled
+      name: clair
+      repository: https://dheeth.github.io/charts
+      version: 0.x.x
+    description: A Helm chart for devtron to enable security integration
+    digest: 2ecb4c37b00262c268f2dfa4d6f8157f1afddb90e8f5c6dae78bcb8c65520248
+    name: security
+    sources:
+    - https://github.com/devtron-labs/charts
+    type: application
+    urls:
+    - https://github.com/dheeth/charts/releases/download/security-0.2.2/security-0.2.2.tgz
+    version: 0.2.2
+  - apiVersion: v2
+    appVersion: 0.2.1
     created: "2022-09-11T21:20:48.047287107Z"
     dependencies:
     - condition: clair.enabled
@@ -5398,4 +5449,4 @@ entries:
     urls:
     - https://github.com/devtron-labs/charts/releases/download/twistlock-defender-22.01.858/twistlock-defender-22.01.858.tgz
     version: 22.01.858
-generated: "2022-09-24T08:12:27.72621321Z"
+generated: "2022-10-07T08:49:42.852727754Z"

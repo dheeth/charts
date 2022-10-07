@@ -5393,6 +5393,23 @@ entries:
   security:
   - apiVersion: v2
     appVersion: 0.2.1
+    created: "2022-10-07T22:03:41.30681563Z"
+    dependencies:
+    - condition: clair.enabled
+      name: clair
+      repository: https://dheeth.github.io/charts
+      version: 0.x.x
+    description: A Helm chart for devtron to enable security integration
+    digest: 332e894cef9bf4bbbb3ea33acae68d0ce8f9d44c0054935c1270c5607f60c1d3
+    name: security
+    sources:
+    - https://github.com/devtron-labs/charts
+    type: application
+    urls:
+    - https://github.com/dheeth/charts/releases/download/security-0.2.3/security-0.2.3.tgz
+    version: 0.2.3
+  - apiVersion: v2
+    appVersion: 0.2.1
     created: "2022-10-07T08:49:42.851905846Z"
     dependencies:
     - condition: clair.enabled
@@ -5670,4 +5687,4 @@ entries:
     urls:
     - https://github.com/devtron-labs/charts/releases/download/twistlock-defender-22.01.858/twistlock-defender-22.01.858.tgz
     version: 22.01.858
-generated: "2022-10-07T21:59:32.924901592Z"
+generated: "2022-10-07T22:03:41.307483946Z"

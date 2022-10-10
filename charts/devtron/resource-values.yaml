@@ -1,15 +1,22 @@
 installer:
-  repo: "dheeth/devtron"
-#  For Kubernetes version < 1.16, set release: legacy. You won't be able to upgrade Devtron unless you upgrade the K8s version to 1.16 or above.
-  release: "v0.6.0" #You can use a branch name or a release tag name as a release, for gitee as source only "main" is supported as of now
-  image: quay.io/devtron/test
-  tag: 0b0f58a1-4333-2629
-  source: "github" # Available options are github and gitee
-#  mode: "dashboard" # Available options are dashboard, full and hyperion (deprecated) NOT USING THIS
-  modules: [] # Available options are cicd
-  arch: "multi-arch"
-  production_overrides: "" # Set true if you want to use this Devtron stack in Production (This will require more resources)
-
+    repo: "devtron-labs/devtron"
+  #  For Kubernetes version < 1.16, set release: legacy. You won't be able to upgrade Devtron unless you upgrade the K8s version to 1.16 or above.
+    release: "v0.6.0" #You can use a branch name or a release tag name as a release, for gitee as source only "main" is supported as of now
+    image: quay.io/devtron/inception
+    tag: c62d4c30-185-9354
+    source: "github" # Available options are github and gitee
+  #  mode: "dashboard" # Available options are dashboard, full and hyperion (deprecated) NOT USING THIS
+    modules: [] # Available options are cicd
+    arch: "multi-arch"
+    production_overrides: "" # Set true if you want to use this Devtron stack in Production (This will require more resources)
+    resources:
+      limits:
+        cpu: "100m"
+        memory: 250Mi
+      requests:
+        cpu: "100m"
+        memory: 250Mi  
+  
 # Change the below values for full mode only
 
 #Use secrets in plaintext, they'll be encoded to base64 automatically.
@@ -18,9 +25,9 @@ secrets: {}
 #  POSTGRESQL_PASSWORD: "change-me"
 
 #  REQUIRED IF BLOB_STORAGE_PROVIDER=AZURE Token with read write access to AZURE_BLOB_CONTAINER_CI_LOG and AZURE_BLOB_CONTAINER_CI_CACHE
-  # AZURE_ACCOUNT_KEY: "xxxxxxxxxx"
+#  AZURE_ACCOUNT_KEY: "xxxxxxxxxx"
 configs:
-  BLOB_STORAGE_PROVIDER: ""
+  BLOB_STORAGE_PROVIDER: ""   #AZURE|S3|MINIO|GCP
   ENABLE_LEGACY_API: "false"  # Set to true if you are installing Devtron on a kubernetes version < k8s 1.19
 # Amazon AWS S3 bucket and region for storing Build-cache for faster build process. Mandatory if BLOB_STORAGE_PROVIDER is AWS.
   #DEFAULT_CACHE_BUCKET: "change-me"   #Do not include s3://
@@ -37,6 +44,77 @@ configs:
 
 # Change the below values for hyperion only mode (Refer https://docs.devtron.ai/#hyperion )
 components:
+  lens:
+    resources:
+      limits:
+        cpu: "25m"
+        memory: 50Mi
+      requests:
+        cpu: "25m"
+        memory: 50Mi
+
+  natsServer:
+    nats:
+      resources:
+        limits:
+          cpu: "50m"
+          memory: 100Mi
+        requests:
+          cpu: "50m"
+          memory: 100Mi
+    reloader:
+      resources:
+        limits:
+          cpu: "10m"
+          memory: 20Mi
+        requests:
+          cpu: "10m"
+          memory: 20Mi
+    metrics:
+      resources:
+        limits:
+          cpu: "25m"
+          memory: 50Mi
+        requests:
+          cpu: "25m"
+          memory: 50Mi        
+
+  devtronHousekeeping:
+    resources:
+      limits:
+        cpu: "50m"
+        memory: 50Mi
+      requests:
+        cpu: "50m"
+        memory: 50Mi        
+
+  gitSensor:      
+    resources:
+      limits:
+        cpu: "100m"
+        memory: 200Mi
+      requests:
+        cpu: "100m"
+        memory: 200Mi 
+
+  kubewatch:      
+    resources:
+      limits:
+        cpu: "25m"
+        memory: 50Mi
+      requests:
+        cpu: "25m"
+        memory: 50Mi 
+
+  argoRollout:      
+    resources:
+      limits:
+        cpu: "25m"
+        memory: 50Mi
+      requests:
+        cpu: "25m"
+        memory: 50Mi 
+
   dashboard:
     config:
       analytics: "false"
@@ -44,12 +122,19 @@ components:
       sentry: "false"
       sentryEnv: "PRODUCTION"
       applicationMetrics: "true"
-    image: "quay.io/devtron/test:5f643efd-4335-2947"
+    image: "quay.io/devtron/dashboard:9c21414c-325-10743"
     imagePullPolicy: IfNotPresent
+    resources:
+      limits:
+        cpu: "25m"
+        memory: 50Mi
+      requests:
+        cpu: "25m"
+        memory: 50Mi
 
   devtron:
-    image: "quay.io/devtron/test:e55e46b4-4336-2887"
-    cicdImage: "quay.io/devtron/test:f819500e-4334-2897"
+    image: "quay.io/devtron/hyperion:299b90b9-280-10744"
+    cicdImage: "quay.io/devtron/devtron:299b90b9-326-10742"
     imagePullPolicy: IfNotPresent
     customOverrides: {}
     serviceMonitor:
@@ -73,26 +158,76 @@ components:
       #  - secretName: devtron-tls
       #    hosts:
       #      - devtron.example.com
+    resources:
+      limits:
+        cpu: "50m"
+        memory: 100Mi
+      requests:
+        cpu: "50m"
+        memory: 100Mi    
 
   argocdDexServer:
     image: "ghcr.io/dexidp/dex:v2.30.2"
     imagePullPolicy: IfNotPresent
+    resources:
+      limits:
+        cpu: "25m"
+        memory: 50Mi
+      requests:
+        cpu: "25m"
+        memory: 50Mi      
     initContainer:
-      authenticator: "quay.io/devtron/test:aecda793-4338-2627"
+      authenticator: "quay.io/devtron/authenticator:aecda793-381-10540"
+      resources:
+        limits:
+          cpu: "10m"
+          memory: 20Mi
+        requests:
+          cpu: "10m"
+          memory: 20Mi        
 
   kubelink:
-    image: "quay.io/devtron/test:d46a0428-4337-2888"
+    image: "quay.io/devtron/kubelink:919924e0-318-10747"
     imagePullPolicy: IfNotPresent
+    resources:
+      limits:
+        cpu: "150m"
+        memory: 300Mi
+      requests:
+        cpu: "150m"
+        memory: 300Mi    
 
   postgres:
     image: "quay.io/devtron/postgres:11.9.0-debian-10-r26"
-    armImage: "postgres:11.9"
     imagePullPolicy: "IfNotPresent"
     persistence:
       volumeSize: "20Gi"
+    resources:
+      limits:
+        cpu: "100m"
+        memory: 200Mi
+      requests:
+        cpu: "100m"
+        memory: 200Mi 
+    initContainer:
+      resources:
+        limits:
+          cpu: "10m"
+          memory: 20Mi
+        requests:
+          cpu: "10m"
+          memory: 20Mi
+    postgresExporter:
+      resources:
+        limits:
+          cpu: "10m"
+          memory: 20Mi
+        requests:
+          cpu: "10m"
+          memory: 20Mi
 
   migrator:
-    image: "quay.io/devtron/test:e6116e86-4497-2768"
+    image: "quay.io/devtron/migrator:9c933d29-149-10140"
     envVars:
       devtron:
         GIT_BRANCH: "main"
@@ -105,20 +240,77 @@ components:
         SCRIPT_LOCATION: "scripts/casbin/"
         GIT_REPO_URL: "https://github.com/devtron-labs/devtron.git"
         DB_NAME: "casbin"
-        GIT_HASH: "b2ad8a35e51d5df63aeaeb583b7166649171e36f"
+        GIT_HASH: "299b90b9322f40d84ebac23a9b43d0bbe23c56ca"
+    devtron:    
+      resources:
+        limits:
+          cpu: "100m"
+          memory: 250Mi
+        requests:
+          cpu: "100m"
+          memory: 250Mi 
+    casbin: 
+      resources:
+        limits:
+          cpu: "25m"
+          memory: 50Mi
+        requests:
+          cpu: "25m"
+          memory: 50Mi
+      initContainer:
+        resources:
+          limits:
+            cpu: "100m"
+            memory: 250Mi
+          requests:
+            cpu: "100m"
+            memory: 250Mi            
+    lens:    
+      resources:
+        limits:
+          cpu: "25m"
+          memory: 50Mi
+        requests:
+          cpu: "25m"
+          memory: 50Mi
+    gitSensor:    
+      resources:
+        limits:
+          cpu: "100m"
+          memory: 200Mi
+        requests:
+          cpu: "100m"
+          memory: 200Mi
+    miscellaneous:    
+      resources:
+        limits:
+          cpu: "10m"
+          memory: 20Mi
+        requests:
+          cpu: "10m"
+          memory: 20Mi  
+    appSync:
+      resources:
+        limits:
+          cpu: "50m"
+          memory: 200Mi
+        requests:
+          cpu: "50m"
+          memory: 200Mi
+      initContainer:
+        resources:
+          limits:
+            cpu: "25m"
+            memory: 50Mi
+          requests:
+            cpu: "25m"
+            memory: 50Mi
 
 
+# values for argocd integration
 argo-cd:
   enabled: false
   fullnameOverride: "argocd"
-  global:
-    image:
-      # -- If defined, a repository applied to all Argo CD deployments
-      repository: quay.io/argoproj/argocd
-      # -- Overrides the global Argo CD image tag whose default is the chart appVersion
-      tag: "v2.4.0"
-      # -- If defined, a imagePullPolicy applied to all Argo CD deployments
-      imagePullPolicy: IfNotPresent
   configs:
     secret:
       createSecret: false
@@ -171,8 +363,8 @@ argo-cd:
           weight: 5
   # argocd-dex-server
   dex:
-    enabled: false
-  
+    enabled: false  
+  # argocd-redis
   redis:
     affinity:
       podAntiAffinity:
@@ -189,7 +381,7 @@ argo-cd:
                 app.kubernetes.io/part-of: argocd
             topologyKey: kubernetes.io/hostname
           weight: 5
-    
+  # argocd-server
   server:
     configEnabled: false
     affinity:
@@ -214,8 +406,10 @@ argo-cd:
         - all
       readOnlyRootFilesystem: true
       runAsNonRoot: true
+    # argocd-rbac-cm
     rbacConfig:
       policy.default: role:admin
+  # argocd-repo-server
   repoServer:
     affinity:
       podAntiAffinity:
@@ -257,17 +451,18 @@ argo-cd:
     enabled: false
   notifications:
     enabled: false
-
+# Values for security integration
 security:
   enabled: false
+  # Values for clair
   clair:
     enabled: false
     fullnameOverride: clair
-
+# Values for notifier integration
 notifier:
   enabled: false
   imagePullPolicy: IfNotPresent
-  image: "quay.io/devtron/test:3ad979b7-4641-2969"
+  image: "quay.io/devtron/notifier:fb4424bb-372-10748"
   configs:
     CD_ENVIRONMENT: PROD
     DB: orchestrator
@@ -279,25 +474,33 @@ notifier:
     secretName: postgresql-postgresql
     keyName: postgresql-password
   resources: {}
-
+# Set enable to true if you want to use minio for storing cache and logs
 minio:
   enabled: false
   replicaCount: 1
-  image: "minio/minio:RELEASE.2021-02-14T04-01-33Z"
+  image: "quay.io/devtron/minio:RELEASE.2021-02-14T04-01-33Z"
   imagePullPolicy: IfNotPresent
-  mbImage: "minio/mc:RELEASE.2021-02-14T04-28-06Z"
+  mbImage: "quay.io/devtron/minio-mc:RELEASE.2021-02-14T04-28-06Z"
   mbImagePullPolicy: IfNotPresent
   persistence:
     storage: "50Gi"
-
+# Change below values for workflow controller
 workflowController:
   image: "quay.io/argoproj/workflow-controller:v3.0.7"
   executorImage: "quay.io/argoproj/argoexec:v3.0.7"
+  resources:
+    limits:
+      cpu: "25m"
+      memory: 50Mi
+    requests:
+      cpu: "25m"
+      memory: 50Mi 
 
+# Values for grafana integration
 monitoring:
   grafana:
     enabled: false
-    image: "grafana/grafana:7.3.1"
+    image: "quay.io/devtron/grafana:7.3.1"
     imagePullPolicy: IfNotPresent
     resources: {}
     grafanaDashboards:
@@ -306,3 +509,4 @@ monitoring:
       resources: {}
     persistence:
       storage: "2Gi"
+  

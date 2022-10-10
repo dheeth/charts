@@ -17,7 +17,7 @@ data:
     create database git_sensor;
     create database lens;
     create database clairv4;
-{{- if eq $.Values.installer.arch "amd64" }}
+{{- if not $.Values.installer.arch }}
 ---
 apiVersion: v1
 kind: Service
@@ -129,6 +129,12 @@ spec:
               find /bitnami/postgresql -mindepth 1 -maxdepth 1 -not -name ".snapshot" -not -name "lost+found" | \
                 xargs chown -R 1001:1001
               chmod -R 777 /dev/shm
+          {{- if .initContainer }}
+          {{- if .initContainer.resources }}
+          resources:
+          {{- toYaml .initContainer.resources | nindent 12 }}
+          {{- end }}
+          {{- end }}
           securityContext:
             runAsUser: 0
           volumeMounts:
@@ -166,6 +172,10 @@ spec:
               value: "no"
             - name: POSTGRESQL_SHARED_PRELOAD_LIBRARIES
               value: pgaudit, uuid-ossp
+          {{- if .resources }}
+          resources:
+          {{- toYaml .resources | nindent 12 }}
+          {{- end }}
           ports:
             - name: tcp-postgresql
               containerPort: 5432
@@ -215,6 +225,12 @@ spec:
                   key: postgresql-password
             - name: DATA_SOURCE_USER
               value: postgres
+          {{- if .postgresExporter }}
+          {{- if .postgresExporter.resources }}
+          resources:
+          {{- toYaml .postgresExporter.resources | nindent 12 }}
+          {{- end }}
+          {{- end }}
           livenessProbe:
             httpGet:
               path: /
@@ -254,7 +270,7 @@ spec:
         resources:
           requests:
             storage: {{ .persistence.volumeSize }}
-{{- else if eq $.Values.installer.arch "arm64" }}
+{{- else if $.Values.installer.arch }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -440,6 +456,12 @@ spec:
             runAsUser: 999
           image: {{ .armImage }}
           imagePullPolicy: {{ .imagePullPolicy }}
+          {{- if .initContainer }}
+          {{- if .initContainer.resources }}
+          resources:
+          {{- toYaml .initContainer.resources | nindent 12 }}
+          {{- end }}
+          {{- end }}
           volumeMounts:
             - mountPath: /customscripts
               name: customscripts-volume
@@ -461,6 +483,10 @@ spec:
             runAsUser: 999
           image: {{ .armImage }}
           imagePullPolicy: {{ .imagePullPolicy }}
+          {{- if .resources }}
+          resources:
+          {{- toYaml .resources | nindent 12 }}
+          {{- end }}
           ports:
             - name: postgres
               containerPort: 5432
@@ -533,6 +559,12 @@ spec:
                   key: postgresql-password
             - name: DATA_SOURCE_USER
               value: postgres
+          {{- if .postgresExporter }}
+          {{- if .postgresExporter.resources }}
+          resources:
+          {{- toYaml .postgresExporter.resources | nindent 12 }}
+          {{- end }}
+          {{- end }}
           livenessProbe:
             httpGet:
               path: /

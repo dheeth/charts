@@ -351,6 +351,54 @@ spec:
     app.kubernetes.io/name: postgres
     app.kubernetes.io/instance: devtron
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgresql-postgresql-metrics
+  labels:
+    helm.sh/chart: postgres-0.4.0
+    app.kubernetes.io/name: postgres
+    app.kubernetes.io/instance: devtron
+    app.kubernetes.io/version: "14.5"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    prometheus.io/port: "9187"
+    prometheus.io/scrape: "true"
+    "helm.sh/resource-policy": keep
+spec:
+  type: ClusterIP
+  ports:
+    - name: http-metrics
+      port: 9187
+      targetPort: http-metrics
+  selector:
+    app.kubernetes.io/name: postgres
+    app.kubernetes.io/instance: devtron
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgresql-postgresql-headless
+  labels:
+    helm.sh/chart: postgres-0.4.0
+    app.kubernetes.io/name: postgres
+    app.kubernetes.io/instance: devtron
+    app.kubernetes.io/version: "14.5"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/resource-policy": keep
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - port: 5432
+      targetPort: postgres
+      protocol: TCP
+      name: postgres
+  selector:
+    app.kubernetes.io/name: postgres
+    app.kubernetes.io/instance: devtron
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -472,6 +520,41 @@ spec:
               name: scripts
             - mountPath: /etc/postgresql
               name: configs
+        - name: metrics
+          image: prometheuscommunity/postgres-exporter:v0.10.1
+          imagePullPolicy: "IfNotPresent"
+          env:
+            - name: DATA_SOURCE_URI
+              value: "127.0.0.1:5432/orchestrator?sslmode=disable"
+            - name: DATA_SOURCE_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-postgresql
+                  key: postgresql-password
+            - name: DATA_SOURCE_USER
+              value: postgres
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http-metrics
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 6
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http-metrics
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 6
+          volumeMounts:
+          ports:
+            - name: http-metrics
+              containerPort: 9187
       volumes:
         - name: run
           emptyDir: {}

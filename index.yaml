@@ -450,6 +450,40 @@ entries:
   devtron-operator:
   - apiVersion: v2
     appVersion: 0.6.0
+    created: "2022-10-10T06:35:55.2880104Z"
+    dependencies:
+    - condition: argo-cd.enabled
+      name: argo-cd
+      repository: https://argoproj.github.io/argo-helm
+      version: 5.2.0
+    - condition: security.enabled
+      name: security
+      repository: https://dheeth.github.io/charts
+      version: 0.x.x
+    description: Chart to configure and install Devtron. Devtron is a Kubernetes Orchestration
+      system.
+    digest: af9719747081687f0018082d035ec2e20f81e2f47aff7c5fce5959672ced2e58
+    home: https://devtron.ai
+    icon: https://s3-ap-southeast-1.amazonaws.com/devtron.ai/images/devtron-sqr-logo.png
+    keywords:
+    - Devtron
+    - Kubernetes
+    - Orchestration
+    - K8s
+    - Deployment
+    - argo-cd
+    - Hyperion
+    maintainers:
+    - email: prakarsh@devtron.ai
+      name: Prakarsh
+    name: devtron-operator
+    sources:
+    - https://github.com/devtron-labs/charts
+    urls:
+    - https://github.com/dheeth/charts/releases/download/devtron-operator-0.22.120/devtron-operator-0.22.120.tgz
+    version: 0.22.120
+  - apiVersion: v2
+    appVersion: 0.6.0
     created: "2022-10-07T22:05:10.955033746Z"
     dependencies:
     - condition: argo-cd.enabled
@@ -5721,4 +5755,4 @@ entries:
     urls:
     - https://github.com/devtron-labs/charts/releases/download/twistlock-defender-22.01.858/twistlock-defender-22.01.858.tgz
     version: 22.01.858
-generated: "2022-10-07T22:05:10.955749274Z"
+generated: "2022-10-10T06:35:55.288715705Z"

@@ -11,7 +11,7 @@ keywords:
   - argo-cd
   - Hyperion
 engine: gotpl
-version: 0.22.123
+version: 0.22.124
 sources:
   - https://github.com/devtron-labs/charts
 dependencies:

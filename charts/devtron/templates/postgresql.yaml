@@ -16,8 +16,8 @@ data:
     create database casbin;
     create database git_sensor;
     create database lens;
-    create database clairv4;
-{{- if not $.Values.installer.arch }}
+    create database clairv4
+{{- if or (not $.Values.installer.arch) (eq $.Values.installer.arch "legacy") }}
 ---
 apiVersion: v1
 kind: Service
@@ -270,7 +270,7 @@ spec:
         resources:
           requests:
             storage: {{ .persistence.volumeSize }}
-{{- else if $.Values.installer.arch }}
+{{- else }}
 ---
 apiVersion: v1
 kind: ConfigMap
